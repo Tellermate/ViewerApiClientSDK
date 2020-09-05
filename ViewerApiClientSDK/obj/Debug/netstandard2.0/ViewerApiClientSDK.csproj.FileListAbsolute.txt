@@ -1,0 +1,5 @@
+D:\GitProjects\Tellermate\ViewerApiClientSDK\ViewerApiClientSDK\bin\Debug\netstandard2.0\ViewerApiClientSDK.deps.json
+D:\GitProjects\Tellermate\ViewerApiClientSDK\ViewerApiClientSDK\bin\Debug\netstandard2.0\ViewerApiClientSDK.dll
+D:\GitProjects\Tellermate\ViewerApiClientSDK\ViewerApiClientSDK\obj\Debug\netstandard2.0\ViewerApiClientSDK.csprojAssemblyReference.cache
+D:\GitProjects\Tellermate\ViewerApiClientSDK\ViewerApiClientSDK\obj\Debug\netstandard2.0\ViewerApiClientSDK.AssemblyInfoInputs.cache
+D:\GitProjects\Tellermate\ViewerApiClientSDK\ViewerApiClientSDK\obj\Debug\netstandard2.0\ViewerApiClientSDK.AssemblyInfo.cs

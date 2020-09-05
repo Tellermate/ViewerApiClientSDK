@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "D:\\GitProjects\\Tellermate\\ViewerApiClientSDK\\ViewerApiClientSDK\\ViewerApiClientSDK\\ViewerApiClientSDK.csproj": {}
+    "D:\\GitProjects\\Tellermate\\ViewerApiClientSDK\\ViewerApiClientSDK\\ViewerApiClientSDK.csproj": {}
   },
   "projects": {
-    "D:\\GitProjects\\Tellermate\\ViewerApiClientSDK\\ViewerApiClientSDK\\ViewerApiClientSDK\\ViewerApiClientSDK.csproj": {
+    "D:\\GitProjects\\Tellermate\\ViewerApiClientSDK\\ViewerApiClientSDK\\ViewerApiClientSDK.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\GitProjects\\Tellermate\\ViewerApiClientSDK\\ViewerApiClientSDK\\ViewerApiClientSDK\\ViewerApiClientSDK.csproj",
+        "projectUniqueName": "D:\\GitProjects\\Tellermate\\ViewerApiClientSDK\\ViewerApiClientSDK\\ViewerApiClientSDK.csproj",
         "projectName": "ViewerApiClientSDK",
-        "projectPath": "D:\\GitProjects\\Tellermate\\ViewerApiClientSDK\\ViewerApiClientSDK\\ViewerApiClientSDK\\ViewerApiClientSDK.csproj",
+        "projectPath": "D:\\GitProjects\\Tellermate\\ViewerApiClientSDK\\ViewerApiClientSDK\\ViewerApiClientSDK.csproj",
         "packagesPath": "C:\\Users\\Customer\\.nuget\\packages\\",
-        "outputPath": "D:\\GitProjects\\Tellermate\\ViewerApiClientSDK\\ViewerApiClientSDK\\ViewerApiClientSDK\\obj\\",
+        "outputPath": "D:\\GitProjects\\Tellermate\\ViewerApiClientSDK\\ViewerApiClientSDK\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Microsoft\\Xamarin\\NuGet\\",
@@ -48,6 +48,10 @@
               "target": "Package",
               "version": "[2.0.3, )",
               "autoReferenced": true
+            },
+            "Newtonsoft.Json": {
+              "target": "Package",
+              "version": "[12.0.3, )"
             }
           },
           "imports": [

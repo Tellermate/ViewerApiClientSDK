@@ -1,11 +1,12 @@
 {
   "version": 2,
-  "dgSpecHash": "gMeHSRgxTzyVsv4L0ZrBf7CBRzD+OOGqPEg+0DsS3aeGv5x9nlqQTt9PVNtfd6pOwR2vllki4UVVosN412ejiA==",
+  "dgSpecHash": "oI85oeGZxG78Eh6KK2KNPuyyqI2ySwCxWphSKzByMjkpCkr9FWGQLhAPrkyYH2bN4C02MBoIc2OxBiV2YZnAmw==",
   "success": true,
-  "projectFilePath": "D:\\GitProjects\\Tellermate\\ViewerApiClientSDK\\ViewerApiClientSDK\\ViewerApiClientSDK\\ViewerApiClientSDK.csproj",
+  "projectFilePath": "D:\\GitProjects\\Tellermate\\ViewerApiClientSDK\\ViewerApiClientSDK\\ViewerApiClientSDK.csproj",
   "expectedPackageFiles": [
     "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder\\microsoft.netcore.platforms\\1.1.0\\microsoft.netcore.platforms.1.1.0.nupkg.sha512",
-    "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder\\netstandard.library\\2.0.3\\netstandard.library.2.0.3.nupkg.sha512"
+    "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder\\netstandard.library\\2.0.3\\netstandard.library.2.0.3.nupkg.sha512",
+    "C:\\Users\\Customer\\.nuget\\packages\\newtonsoft.json\\12.0.3\\newtonsoft.json.12.0.3.nupkg.sha512"
   ],
   "logs": []
 }
