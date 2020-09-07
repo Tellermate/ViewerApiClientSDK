@@ -13,9 +13,9 @@ This .Net project You can use this to extract your cash counting data from the c
 
 ### The simplest code to get some count data
 
-Tellermate will have supplied a user ID and an API access key. Both of these will be in the Guid format. The ID is associated with your company and cannot be changed whereas the access key can be reset should it ever become compromised. Using the supplied information you can create a `Credential` object. See below: 
+Tellermate will have supplied a user ID and an API access key. Both of these will be in the Guid format. The ID is associated with your company and cannot be changed whereas the access key can be reset should it ever become compromised. Using the supplied information you can create a `Credentials` object. See below: 
 
-            tm.Credentials creds = new tm.Credentials()
+            tm.Credentials creds = new Credentials()
             {
                 ID = new Guid("dc09a1ee-799b-4d4d-b33c-7080c09daebd"),
                 Key = new Guid("2f1d1241-ce0e-4b73-a8af-dad1f2cd1a7f"),
