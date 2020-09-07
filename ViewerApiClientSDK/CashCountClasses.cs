@@ -32,7 +32,7 @@ namespace Tellermate.ViewerApiClientSDK
         public DateTime CountTime { get; set; }
         public DateTime UploadTime { get; set; }
         public int sequencenumber { get; set; }
-        public string CountType { get; set; }
+        public int CountType { get; set; }
         public int Total { get; set; }
         public List<Currency> Currencies { get; set; }
 

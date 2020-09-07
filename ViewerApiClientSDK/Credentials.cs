@@ -6,7 +6,11 @@ namespace Tellermate.ViewerApiClientSDK
 {
     public class Credentials
     {
+
         public Guid ID { get; set; }
         public Guid Key { get; set; }
+
+
+
     }
 }
