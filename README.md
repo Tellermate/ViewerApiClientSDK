@@ -61,6 +61,6 @@ All the API calls return a `ClientResult `object. A `ClientResult` is made of th
 
     ClientResult<List<MachineStore>> data = client.getMachineStores();
 
-**getCountTypes** - for a list of Tellermate count types. Use this list to return 
+**getCountTypes** - for a list of Tellermate count types. Use this list to return full information on the count type. The cashcount API endpoint only returns the count type ID.
 
     ClientResult<List<CountType>> data = client.getCountTypes();
