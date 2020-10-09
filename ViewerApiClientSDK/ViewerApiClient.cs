@@ -21,10 +21,21 @@ namespace Tellermate.ViewerApiClientSDK
         private Credentials _credentials;
         public string ServerBaseAddress { get; set; }
         public RequestStatus Status { get; set; }
-        public ViewerApiClient(Credentials credentials)
+        public ViewerApiClient(Credentials credentials, bool IsDev = false)
         {
-            ServerBaseAddress = "https://touchviewerdataapi.azurewebsites.net/api/"; // default address
-           // ServerBaseAddress = "https://localhost:44349/api/"; // default address (dev)
+            if(IsDev)
+            {
+                ServerBaseAddress = "https://touchviewerdataapi-development.azurewebsites.net/api/"; 
+            }
+
+            else
+
+            {
+                ServerBaseAddress = "https://touchviewerdataapi.azurewebsites.net/api/"; // default address 
+            }
+
+
+            // ServerBaseAddress = "https://localhost:44349/api/"; // 
 
             _credentials = credentials;
 
