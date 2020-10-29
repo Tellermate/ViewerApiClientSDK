@@ -120,7 +120,7 @@ namespace Tellermate.ViewerApiClientSDK
 
             catch (Exception ex)
             {
-                Activity?.Invoke("GetToken - PROGRAM ERROR: " + ex.Message);
+                Activity?.Invoke("GetToken - PROGRAM ERROR: " + GetErrMsgPath(ex));
                 return new ClientResult<Guid?>(RequestStatus.ClientCodeError, null, ex.Message);
             }
 
@@ -159,7 +159,7 @@ namespace Tellermate.ViewerApiClientSDK
             }
 
 
-            if (Token == null)
+            if (Token == null || Token.RequestStatus != RequestStatus.OK)
             {
                 Activity?.Invoke(EndpointName + " - There is no token");
                 Token = GetToken(_credentials);
@@ -236,14 +236,26 @@ namespace Tellermate.ViewerApiClientSDK
 
             catch (Exception ex)
             {
-                Activity?.Invoke(EndpointName + " - Client error: " + ex.Message);
+                Activity?.Invoke(EndpointName + " - Client error: " + GetErrMsgPath(ex));
                 return new ClientResult<T>(RequestStatus.ClientCodeError,  ex.Message);
             }
 
         }
 
 
+        private string GetErrMsgPath(Exception ex)
+        {
 
+            string op = ":";
+
+            while (ex != null)
+            {
+                op = op + "-" + ex.Message;
+                ex = ex.InnerException;
+            }
+
+            return op;
+        }
 
 
         private ClientResult<HttpClient> NewNetClient()
