@@ -77,5 +77,13 @@ There is also an option to send ad a function reference to every get a step by s
      
      public MyFunction(string WhatHappened)
      {
-     GlobalLogString += WhatHappened;
+     GlobalLogString += WhatHappened + "/r/n";
      }
+     
+GlobalLogString will look somthing like this after a call to fetch data
+
+     GetCashCounts - Data retrieved successfully
+     GetCountTypeDefs - Data retrieved successfully
+     GetToken - OK: Token = e4d15b32-8c41-4388-a00f-219ff98f0d43
+     Getting new token
+     GetCountTypeDefs - There is no token
