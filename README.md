@@ -25,7 +25,6 @@ Next create an instance of the `ViewerApiClient` and pass it the credential obje
 
      tm.ViewerApiClient Vclient = new tm.ViewerApiClient(creds);
 
-
 You can now start accessing the data via the API
 
 All the API calls return a `ClientResult `object. A `ClientResult` is made of three main parts.
@@ -42,6 +41,8 @@ All the API calls return a `ClientResult `object. A `ClientResult` is made of th
 3. The `Message` property contains various extra information to help with debugging. For example if you get a `RequestStatus.Other` the exact server response will be detailed in this property.
 
 ## The following API endpoints are available
+
+
 
 **getCounts** - The following example retrieves all the count data from between 1st-Jan-2015 and today and places value in CountDataRoot 
 
@@ -64,3 +65,25 @@ All the API calls return a `ClientResult `object. A `ClientResult` is made of th
 **getCountTypes** - for a list of Tellermate count types. Use this list to return full information on the count type. The cashcount API endpoint only returns the count type ID.
 
     ClientResult<List<CountType>> data = client.getCountTypes();
+    
+ ## Naritave Call Back   
+    
+There is also an option to send ad a function reference to every get a step by step description of what the Client is doing. 
+
+**For example**
+
+     ClientResult<List<MachineStore>> data = client.getMachineStores(MyFunction);
+     
+     
+     public MyFunction(string WhatHappened)
+     {
+     GlobalLogString += WhatHappened + "/r/n";
+     }
+     
+GlobalLogString will look somthing like this after a call to fetch data
+
+     GetCashCounts - Data retrieved successfully
+     GetCountTypeDefs - Data retrieved successfully
+     GetToken - OK: Token = e4d15b32-8c41-4388-a00f-219ff98f0d43
+     Getting new token
+     GetCountTypeDefs - There is no token
