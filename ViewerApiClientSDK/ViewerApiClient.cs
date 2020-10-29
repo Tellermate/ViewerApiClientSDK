@@ -21,21 +21,30 @@ namespace Tellermate.ViewerApiClientSDK
         private Credentials _credentials;
         public string ServerBaseAddress { get; set; }
         public RequestStatus Status { get; set; }
-        public ViewerApiClient(Credentials credentials, bool IsDev = false)
+        public delegate void delActivity(string msg);
+        public delActivity Activity { get; set; }
+     
+
+        public Guid? CurrentToken {
+            get{ 
+
+                return Token!=null? Token.ObjectValue:null;
+            }
+        }
+
+
+        public ViewerApiClient(Credentials credentials,  delActivity messageCalBack = null)
         {
-            if(IsDev)
-            {
-                ServerBaseAddress = "https://touchviewerdataapi-development.azurewebsites.net/api/"; 
-            }
+            ServerBaseAddress = "https://touchviewerdataapi.azurewebsites.net/api/";
+        }
+    public ViewerApiClient(Credentials credentials, string BaseAddress, delActivity messageCalBack = null)
+        {
 
-            else
-
-            {
-                ServerBaseAddress = "https://touchviewerdataapi.azurewebsites.net/api/"; // default address 
-            }
+            Activity = messageCalBack;
 
 
-            // ServerBaseAddress = "https://localhost:44349/api/"; // 
+            ServerBaseAddress = BaseAddress;
+
 
             _credentials = credentials;
 
@@ -59,6 +68,9 @@ namespace Tellermate.ViewerApiClientSDK
             string json = JsonConvert.SerializeObject(credentials);
             StringContent sc = new StringContent(json, Encoding.UTF8, "application/json");
 
+
+            Activity?.Invoke("Getting new token");
+
             try
             {
                 HttpResponseMessage m = Client.PostAsync("GetToken", sc).Result;
@@ -68,19 +80,21 @@ namespace Tellermate.ViewerApiClientSDK
                 if (m.IsSuccessStatusCode)
                 {
                     TokenRequestResponse result = JsonConvert.DeserializeObject<TokenRequestResponse>(JsonPayload);
-                    //AddInfoLine("New Token recieved: " + result.Value);
+                  
                     Client.DefaultRequestHeaders.Remove("Authorization");
                     Client.DefaultRequestHeaders.Add("Authorization", result.Value);
 
                     Guid tkn;
                     if (Guid.TryParse(result.Value, out tkn))
                     {
+                        Activity?.Invoke("GetToken - OK: Token = " + tkn.ToString());
                         return new ClientResult<Guid?>(RequestStatus.OK, tkn, "ALL OK :-)");
                     }
 
                     else
 
                     {
+                        Activity?.Invoke("GetToken - BAD TOKEN: The token the server returned was not in the correct format.");
                         return new ClientResult<Guid?>(RequestStatus.BadToken, null, "The token the server returned was not in the correct format. Please contact Tellermate");
                     }
                 }
@@ -89,11 +103,14 @@ namespace Tellermate.ViewerApiClientSDK
                 {
                     if (m.StatusCode == HttpStatusCode.Unauthorized)
                     {
+                        Activity?.Invoke("GetToken - UNAUTHORIZED: because " + m.ReasonPhrase);
                         return new ClientResult<Guid?>(RequestStatus.Unathorized, null, m.ReasonPhrase);
+                        
                     }
 
                     else
                     {
+                        Activity?.Invoke("GetToken - " + m.StatusCode.ToString() + " - because " + m.ReasonPhrase);
                         return new ClientResult<Guid?>(RequestStatus.Other, null, m.StatusCode.ToString() + ": " + m.ReasonPhrase);
                     }
 
@@ -103,118 +120,74 @@ namespace Tellermate.ViewerApiClientSDK
 
             catch (Exception ex)
             {
-                // AddInfoLine(ex.Message);
+                Activity?.Invoke("GetToken - PROGRAM ERROR: " + ex.Message);
                 return new ClientResult<Guid?>(RequestStatus.ClientCodeError, null, ex.Message);
             }
 
         }
-        public ClientResult<RootOrg> getCounts(DateTime DateFrom, DateTime DateTo, int Attempt = 0)
+
+        public ClientResult<RootOrg> getCounts(DateTime DateFrom, DateTime DateTo)
         {
-
-
-            if (Token == null)
-            {
-
-                Token = GetToken(_credentials);
-
-                if (Token.RequestStatus != RequestStatus.OK)
-                {
-                    return new ClientResult<RootOrg>(Token.RequestStatus, null, Token.Message);
-                }
-
-            }
 
             string url = string.Format("GetCashCounts?DateFrom={0}&DateTo={1}",
-                         DateFrom.ToString("yyyy-MM-dd"),
-                         DateTo.ToString("yyyy-MM-dd"));
+             DateFrom.ToString("yyyy-MM-dd"),
+             DateTo.ToString("yyyy-MM-dd"));
 
+            return getServerResponse<RootOrg>(url);
 
-            try
-            {
-                HttpResponseMessage m = Client.GetAsync(url).Result;
-
-                string JsonPayload = m.Content.ReadAsStringAsync().Result;
-
-                if (m.IsSuccessStatusCode)
-                {
-                    RootOrg CountData = JsonConvert.DeserializeObject<RootOrg>(JsonPayload);
-                    return new ClientResult<RootOrg>(RequestStatus.OK, CountData, JsonPayload);
-                }
-
-                else
-                {
-                    if (m.StatusCode == HttpStatusCode.Unauthorized)
-                    {
-
-
-                        if (m.ReasonPhrase == "NotFound" ||
-                            m.ReasonPhrase == "Expired" ||
-                            m.ReasonPhrase == "UnexpectedIp")
-                        {
-                            Token = GetToken(_credentials);
-
-                            if (Token.RequestStatus == RequestStatus.OK)
-                            {
-                                if (Attempt < 4)
-                                {
-                                    ClientResult<RootOrg> result = getCounts(DateFrom, DateTo, ++Attempt);
-                                    return result;
-                                }
-
-                                else
-                                {
-                                    return new ClientResult<RootOrg>(RequestStatus.TooManyTries, null, "");
-                                }
-                            }
-                            else
-                            {
-                                return new ClientResult<RootOrg>(Token.RequestStatus, null, Token.Message);
-                            }
-                        }
-
-                        return new ClientResult<RootOrg>(RequestStatus.Unathorized, null, m.ReasonPhrase);
-                    }
-
-                    else
-                    {
-                        return new ClientResult<RootOrg>(RequestStatus.Other, null, "API error - Server said: " + m.StatusCode.ToString() + "...and added: " + m.ReasonPhrase);
-                    }
-                }
-            }
-
-            catch (Exception ex)
-            {
-
-                return new ClientResult<RootOrg>(RequestStatus.ClientCodeError, null, ex.Message);
-            }
+         
         }
-        public ClientResult<List<MachineStore>> getMachineStores(int Attempt = 0)
+
+        public ClientResult<List<MachineStore>> getMachineStores()
         {
+            return getServerResponse<List<MachineStore>>("GetStoreMachines");
+        }
+
+        public ClientResult<List<CountType>> getCountTypes()
+        {
+            return getServerResponse<List<CountType>>("GetCountTypeDefs");
+        }
+
+        public ClientResult<T> getServerResponse<T>(string EndPointURL, int Attempt = 0) 
+        {
+
+            string EndpointName = EndPointURL;
+            int n = EndPointURL.IndexOf('?');
+            if (n!=-1)
+            {
+                EndpointName = EndPointURL.Substring(0, n);
+            }
+
+
             if (Token == null)
             {
-
+                Activity?.Invoke(EndpointName + " - There is no token");
                 Token = GetToken(_credentials);
 
                 if (Token.RequestStatus != RequestStatus.OK)
                 {
-                    return new ClientResult<List<MachineStore>>(Token.RequestStatus, null, Token.Message);
+
+                    return new ClientResult<T>(Token.RequestStatus,  Token.Message);
                 }
 
             }
 
-            string url = "GetStoreMachines";
-
-
             try
             {
-                HttpResponseMessage m = Client.GetAsync(url).Result;
+                HttpResponseMessage m = Client.GetAsync(EndPointURL).Result;
 
                 string JsonPayload = m.Content.ReadAsStringAsync().Result;
 
+
+                Activity?.Invoke(JsonPayload);
+
                 if (m.IsSuccessStatusCode)
                 {
-                    List<MachineStore> data = JsonConvert.DeserializeObject<List<MachineStore>>(JsonPayload);
-                    return new ClientResult<List<MachineStore>>(RequestStatus.OK, data, JsonPayload);
+                    T data = JsonConvert.DeserializeObject<T>(JsonPayload);
+
+                    Activity?.Invoke(EndpointName + " - Data retrieved successfully");
+
+                    return new ClientResult<T>(RequestStatus.OK, data, JsonPayload);
                 }
 
                 else
@@ -233,120 +206,44 @@ namespace Tellermate.ViewerApiClientSDK
                             {
                                 if (Attempt < 4)
                                 {
-                                    ClientResult<List<MachineStore>> result = getMachineStores( ++Attempt);
+                                    Activity?.Invoke(EndpointName + " - Attempt number " + Attempt.ToString());
+                                    ClientResult<T> result = getServerResponse<T>(EndPointURL,++Attempt);
                                     return result;
                                 }
 
                                 else
                                 {
-                                    return new ClientResult<List<MachineStore>>(RequestStatus.TooManyTries, null, "");
+                                    Activity?.Invoke(EndpointName + " - Max attempts exceeded, exiting with error");
+                                    return new ClientResult<T>(RequestStatus.TooManyTries,  "");
                                 }
                             }
                             else
                             {
-                                return new ClientResult<List<MachineStore>>(Token.RequestStatus, null, Token.Message);
+                                return new ClientResult<T>(Token.RequestStatus,  Token.Message);
                             }
                         }
-
-                        return new ClientResult<List<MachineStore>>(RequestStatus.Unathorized, null, m.ReasonPhrase);
+                        Activity?.Invoke(EndpointName + " - UNAUTHORIZED : " + m.ReasonPhrase);
+                        return new ClientResult<T>(RequestStatus.Unathorized,  m.ReasonPhrase);
                     }
 
                     else
                     {
-                        return new ClientResult<List<MachineStore>>(RequestStatus.Other, null, "API error - Server said: " + m.StatusCode.ToString() + "...and added: " + m.ReasonPhrase);
+                        Activity?.Invoke(EndpointName + " - API error Server said: " + m.StatusCode.ToString() + "...and added: " + m.ReasonPhrase);
+                        return new ClientResult<T>(RequestStatus.Other,  "API error - Server said: " + m.StatusCode.ToString() + "...and added: " + m.ReasonPhrase);
                     }
                 }
             }
 
             catch (Exception ex)
             {
-
-                return new ClientResult<List<MachineStore>>(RequestStatus.ClientCodeError, null, ex.Message);
+                Activity?.Invoke(EndpointName + " - Client error: " + ex.Message);
+                return new ClientResult<T>(RequestStatus.ClientCodeError,  ex.Message);
             }
-
-
 
         }
 
-        public ClientResult<List<CountType>> getCountTypes(int Attempt = 0)
-        {
-            if (Token == null)
-            {
-
-                Token = GetToken(_credentials);
-
-                if (Token.RequestStatus != RequestStatus.OK)
-                {
-                    return new ClientResult<List<CountType>>(Token.RequestStatus, null, Token.Message);
-                }
-
-            }
-
-            string url = "GetCountTypeDefs";
 
 
-            try
-            {
-                HttpResponseMessage m = Client.GetAsync(url).Result;
-
-                string JsonPayload = m.Content.ReadAsStringAsync().Result;
-
-                if (m.IsSuccessStatusCode)
-                {
-                    List<CountType> data = JsonConvert.DeserializeObject<List<CountType>>(JsonPayload);
-                    return new ClientResult<List<CountType>>(RequestStatus.OK, data, JsonPayload);
-                }
-
-                else
-                {
-                    if (m.StatusCode == HttpStatusCode.Unauthorized)
-                    {
-
-
-                        if (m.ReasonPhrase == "NotFound" ||
-                            m.ReasonPhrase == "Expired" ||
-                            m.ReasonPhrase == "UnexpectedIp")
-                        {
-                            Token = GetToken(_credentials);
-
-                            if (Token.RequestStatus == RequestStatus.OK)
-                            {
-                                if (Attempt < 4)
-                                {
-                                    ClientResult<List<CountType>> result = getCountTypes(++Attempt);
-                                    return result;
-                                }
-
-                                else
-                                {
-                                    return new ClientResult<List<CountType>>(RequestStatus.TooManyTries, null, "");
-                                }
-                            }
-                            else
-                            {
-                                return new ClientResult<List<CountType>>(Token.RequestStatus, null, Token.Message);
-                            }
-                        }
-
-                        return new ClientResult<List<CountType>>(RequestStatus.Unathorized, null, m.ReasonPhrase);
-                    }
-
-                    else
-                    {
-                        return new ClientResult<List<CountType>>(RequestStatus.Other, null, "API error - Server said: " + m.StatusCode.ToString() + "...and added: " + m.ReasonPhrase);
-                    }
-                }
-            }
-
-            catch (Exception ex)
-            {
-
-                return new ClientResult<List<CountType>>(RequestStatus.ClientCodeError, null, ex.Message);
-            }
-
-
-
-        }
 
 
         private ClientResult<HttpClient> NewNetClient()
@@ -363,54 +260,15 @@ namespace Tellermate.ViewerApiClientSDK
                 
             }
 
- return new ClientResult<HttpClient>(RequestStatus.OK, NewClient, "");
+            return new ClientResult<HttpClient>(RequestStatus.OK, NewClient, "");
 
         }
 
 
     }
 
-    /*
-    public class GetTokenResult
-    {
-        public RequestStatus RequestStatus { get; private set; }
-        public Guid? Token { get; private set; }
-        public string Message { get; private set; }
 
-
-
-        public GetTokenResult(RequestStatus requestStatus, Guid? token, string message)
-        {
-            RequestStatus = requestStatus;
-            Token = token;
-            Message = message;
-
-        }
-
-    }
-
-    public class GetCountResult
-    {
-        public RequestStatus RequestStatus { get; private set; }
-        public string Message { get; private set; }
-        public RootOrg Organisation { get; private set; }
-
-
-
-
-        public GetCountResult(RequestStatus requestStatus, RootOrg organisation, string message)
-        {
-            RequestStatus = requestStatus;
-            Organisation = organisation;
-            Message = message;
-        }
-
-    }
-
-    */
-
-
-    public class ClientResult<T>
+    public class ClientResult<T> //where T : class
     {
         public RequestStatus RequestStatus { get; private set; }
         public string Message { get; private set; }
@@ -419,10 +277,17 @@ namespace Tellermate.ViewerApiClientSDK
 
 
 
-        public ClientResult(RequestStatus requestStatus, T ReturnedValue, string message)
+        public ClientResult(RequestStatus requestStatus, T ReturnedValue, string message) 
         {
             RequestStatus = requestStatus;
             ObjectValue = ReturnedValue;
+            Message = message;
+        }
+
+        public ClientResult(RequestStatus requestStatus,  string message)
+        {
+            RequestStatus = requestStatus;
+           // ObjectValue = null;
             Message = message;
         }
 

@@ -23,7 +23,7 @@ namespace Tellermate.ViewerApiClientSDK
         public int decimalplaces { get; set; }
         public string htmlsymbol { get; set; }
         public List<Denomination> Denominations { get; set; }
-        public List<NonCash> NonCash { get; set; }
+  
 
     }
 
@@ -51,7 +51,7 @@ namespace Tellermate.ViewerApiClientSDK
         public string Cashier { get; set; }
         public string Shift { get; set; }
         public List<Currency> Currencies { get; set; }
-        
+        public List<NonCash> NonCash { get; set; }
 
     }
 

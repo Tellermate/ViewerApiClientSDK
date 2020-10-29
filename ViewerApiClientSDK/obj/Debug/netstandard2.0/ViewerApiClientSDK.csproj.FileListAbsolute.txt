@@ -6,3 +6,4 @@ D:\GitProjects\Tellermate\ViewerApiClientSDK\ViewerApiClientSDK\obj\Debug\netsta
 D:\GitProjects\Tellermate\ViewerApiClientSDK\ViewerApiClientSDK\bin\Debug\netstandard2.0\ViewerApiClientSDK.pdb
 D:\GitProjects\Tellermate\ViewerApiClientSDK\ViewerApiClientSDK\obj\Debug\netstandard2.0\ViewerApiClientSDK.dll
 D:\GitProjects\Tellermate\ViewerApiClientSDK\ViewerApiClientSDK\obj\Debug\netstandard2.0\ViewerApiClientSDK.pdb
+D:\GitProjects\Tellermate\ViewerApiClientSDK\ViewerApiClientSDK\obj\Debug\netstandard2.0\ViewerApiClientSDK.csprojAssemblyReference.cache
