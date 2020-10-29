@@ -68,9 +68,9 @@ All the API calls return a `ClientResult `object. A `ClientResult` is made of th
     
  ## Naritave Call Back   
     
-    There is also an option to send ad a function reference to every get a step by step description of what the Client is doing. 
+There is also an option to send ad a function reference to every get a step by step description of what the Client is doing. 
 
-For example
+**For example**
 
      ClientResult<List<MachineStore>> data = client.getMachineStores(MyFunction);
      
