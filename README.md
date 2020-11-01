@@ -57,10 +57,28 @@ All the API calls return a `ClientResult `object. A `ClientResult` is made of th
      {
           // Handle error
      }
+     
+There are 3 overrides active on the getCounts end point: 
+
+Gets all counts between two dates
+
+    getCounts(DateTime DateFrom, DateTime DateTo)
+     
+Gets all counts between two dates from the specified store. Note that a list of stores and their Id's can be obtained by calling the getMachineStores endpoint.
+
+    getCounts(DateTime DateFrom, DateTime DateTo, Guid StoreID)
+     
+Gets all counts between two dates from a specified till in the specified store
+
+    getCounts(DateTime DateFrom, DateTime DateTo, Guid StoreID, int TillNo)
+
+---
 
 **getMachineStores** - for a lits of stores with their associated touch units
 
     ClientResult<List<MachineStore>> data = client.getMachineStores();
+    
+---
 
 **getCountTypes** - for a list of Tellermate count types. Use this list to return full information on the count type. The cashcount API endpoint only returns the count type ID.
 
@@ -87,3 +105,5 @@ GlobalLogString will look somthing like this after a call to fetch data
      GetToken - OK: Token = e4d15b32-8c41-4388-a00f-219ff98f0d43
      Getting new token
      GetCountTypeDefs - There is no token
+
+--
