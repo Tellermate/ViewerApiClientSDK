@@ -138,6 +138,34 @@ namespace Tellermate.ViewerApiClientSDK
          
         }
 
+        public ClientResult<RootOrg> getCounts(DateTime DateFrom, DateTime DateTo, Guid StoreID)
+        {
+
+            string url = string.Format("GetCashCounts?DateFrom={0}&DateTo={1}&StoreID={2}",
+             DateFrom.ToString("yyyy-MM-dd"),
+             DateTo.ToString("yyyy-MM-dd"),
+            StoreID.ToString());
+
+            return getServerResponse<RootOrg>(url);
+
+
+        }
+
+        public ClientResult<RootOrg> getCounts(DateTime DateFrom, DateTime DateTo, Guid StoreID, int TillNo)
+        {
+
+            string url = string.Format("GetCashCounts?DateFrom={0}&DateTo={1}&StoreID={2}&TillNumber={3}",
+            DateFrom.ToString("yyyy-MM-dd"),
+            DateTo.ToString("yyyy-MM-dd"),
+            StoreID.ToString(),
+            TillNo.ToString());
+
+            return getServerResponse<RootOrg>(url);
+
+
+        }
+
+
         public ClientResult<List<MachineStore>> getMachineStores()
         {
             return getServerResponse<List<MachineStore>>("GetStoreMachines");

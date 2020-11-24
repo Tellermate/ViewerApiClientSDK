@@ -58,6 +58,7 @@ namespace Tellermate.ViewerApiClientSDK
     public partial class Store
     {
         public string Name { get; set; }
+        public Guid StoreID { get; set;}
         public List<CashCount> CashCounts { get; set; }
 
     }
