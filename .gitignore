@@ -1,0 +1,10 @@
+﻿################################################################################
+# This .gitignore file was automatically created by Microsoft(R) Visual Studio.
+################################################################################
+
+/.vs/ViewerApiClientSDK/v17/.suo
+/.vs/ViewerApiClientSDK/DesignTimeBuild/.dtbcache.v2
+/.vs/ViewerApiClientSDK/FileContentIndex
+/ViewerApiClientSDK/bin/Debug/netstandard2.0
+/ViewerApiClientSDK/obj/Debug/netstandard2.0
+/ViewerApiClientSDK/obj
